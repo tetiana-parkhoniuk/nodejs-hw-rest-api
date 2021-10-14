@@ -46,6 +46,7 @@ USERS:
   "token": null,
   "password": "$2a$10$jUd03Q/LrnJsJ9zeyITndO9mnNo1D.8vlKe9qgslUEnm.F92aM7My",
   "avatarURL": "/avatars/user_61653d8e106682579406812e_avatar.png"
+}
 ```
 
 ### Files Upload:

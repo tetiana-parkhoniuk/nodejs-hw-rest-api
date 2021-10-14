@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
 const { SECRET_KEY } = process.env;
 
 const userSchema = Schema({
@@ -24,6 +25,9 @@ const userSchema = Schema({
         type: String,
         default: null
     },
+    avatarURL: {
+        type: String,
+    },
 }, { versionKey: false, timestamps: true });
 
 userSchema.methods.setPassword = function (password) {
@@ -40,6 +44,21 @@ userSchema.methods.createToken = function () {
     };
     return jwt.sign(payload, SECRET_KEY, {expiresIn: '1h'});
 }
+
+userSchema.methods.createGravatar = function () {
+    this.avatarURL = gravatar.url(this.email, { s: '250' }, true);
+}
+
+userSchema.methods.editAvatar = function (filePath) {
+    const avatar = jimp.read(filePath);
+    avatar
+        .autocrop()
+        .cover(
+            250,
+            250,
+            jimp.HORIZONTAL_ALIGN_CENTER | jimp.VERTICAL_ALIGN_MIDDLE,
+        ).writeAsync(filePath);
+};
 
 const userJoiSchema = Joi.object({
     password: Joi.string().min(6).required(),

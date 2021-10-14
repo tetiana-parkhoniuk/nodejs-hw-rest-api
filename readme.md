@@ -35,3 +35,24 @@ USERS:
   "favorite": false
 }
 ```
+
+### New User Example:
+
+```ruby
+{
+  "_id": "61653d8e106682579406812e",
+  "email": "nica@mail.com",
+  "subscription": "starter",
+  "token": null,
+  "password": "$2a$10$jUd03Q/LrnJsJ9zeyITndO9mnNo1D.8vlKe9qgslUEnm.F92aM7My",
+  "avatarURL": "/avatars/user_61653d8e106682579406812e_avatar.png"
+```
+
+### Files Upload:
+
+Use this route to upload a new avatar for your user profile:
+- router.patch('api/users/avatars') with RequestBody: your uploaded file.
+
+An image will be resized with the help of jimp to 250x250.
+A default avatar is created automatically with the help of gravatar.
+

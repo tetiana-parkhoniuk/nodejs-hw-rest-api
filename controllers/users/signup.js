@@ -1,4 +1,5 @@
 const { Conflict } = require('http-errors');
+const Mailgen = require('mailgen');
 const { User } = require('../../models');
 const { sendEmail } = require('../../helpers');
 
@@ -20,14 +21,12 @@ const signup = async (req, res) => {
         to: email,
         subject: 'Email Verification',
         html: `
-        <a href="http://localhost:3000/api/users/verify/${verificationToken}" target="_blank">
-        Click here to confirm your email address
-        </a>
+        <a href="http://localhost:3000/api/users/verify/${verificationToken}" target="_blank">Click here to confirm your email address</a>
         `
     }
+
     await sendEmail(verificationEmail);
 
-    
     res.status(201).json({
         status: 'success',
         code: 201,

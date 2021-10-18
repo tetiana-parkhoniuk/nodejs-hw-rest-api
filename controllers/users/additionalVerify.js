@@ -15,12 +15,12 @@ const additionalVerify = async (req, res) => {
                 to: email,
                 subject: 'Additional Email Verification',
                 html: `
-                <a href="http://localhost:3000/api/users/verify/${verificationToken}" target="_blank">
-                Click here to confirm your email address
-                </a>
+                <a href="http://localhost:3000/api/users/verify/${verificationToken}" target="_blank">Click here to confirm your email address</a>
                 `
             }
+
             await sendEmail(additionalEmail);
+            
             res.json({
                 status: 'success',
                 code: 200,

@@ -3,6 +3,7 @@ const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const gravatar = require('gravatar');
+const { v4: uuidv4 } = require('uuid'); 
 const { SECRET_KEY } = process.env;
 
 const userSchema = Schema({
@@ -27,6 +28,14 @@ const userSchema = Schema({
     },
     avatarURL: {
         type: String,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    verificationToken: {
+        type: String,
+        required: [true, 'Verification token is required'],
     },
 }, { versionKey: false, timestamps: true });
 
@@ -60,6 +69,10 @@ userSchema.methods.editAvatar = function (filePath) {
         ).writeAsync(filePath);
 };
 
+userSchema.methods.createVerificationToken = function () {
+    this.verificationToken = uuidv4();
+}
+
 const userJoiSchema = Joi.object({
     password: Joi.string().min(6).required(),
     email: Joi.string().min(1).required()
@@ -69,10 +82,15 @@ const updateSubscriptionJoiSchema = Joi.object({
     subscription: Joi.string().required()
 })
 
+const additionalVerifyJoiShema = Joi.object({
+    email: Joi.string().required()
+})
+
 const User = model('user', userSchema);
 
 module.exports = {
     userJoiSchema,
     updateSubscriptionJoiSchema,
+    additionalVerifyJoiShema,
     User
 }

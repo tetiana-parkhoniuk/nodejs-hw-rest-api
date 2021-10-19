@@ -1,7 +1,6 @@
 const { Conflict } = require('http-errors');
-const Mailgen = require('mailgen');
 const { User } = require('../../models');
-const { sendEmail } = require('../../helpers');
+const { sendEmail, verificationEmail} = require('../../helpers');
 
 const signup = async (req, res) => {
     const { email, password } = req.body;
@@ -17,15 +16,9 @@ const signup = async (req, res) => {
     await newUser.save();
 
     const { verificationToken } = newUser;
-    const verificationEmail = {
-        to: email,
-        subject: 'Email Verification',
-        html: `
-        <a href="http://localhost:3000/api/users/verify/${verificationToken}" target="_blank">Click here to confirm your email address</a>
-        `
-    }
+    const letter = await verificationEmail(email, verificationToken);
 
-    await sendEmail(verificationEmail);
+    await sendEmail(letter);
 
     res.status(201).json({
         status: 'success',

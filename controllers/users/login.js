@@ -5,7 +5,10 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user || !user.comparePassword(password)) {
-        throw new Unauthorized('Email or password is incorrect.')
+        throw new Unauthorized('Email or password is incorrect.');
+    }
+    if (!user.isVerified) {
+        throw new Unauthorized('Email is not verified. Please finish your account verification');
     }
 
     const token = user.createToken();
